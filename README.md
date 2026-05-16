@@ -1,122 +1,122 @@
-# 🚀 Stateful AI Evaluation Pipeline
+# 🛡️ LangGuard Core
 
-A production-grade, stateful AI agent pipeline built with **LangGraph**, **FastAPI**, and a multi-database architecture (**Neo4j**, **ChromaDB**, **Redis**). This project implements a high-fidelity anti-hallucination workflow designed for enterprise-level reliability and observability.
+**LangGuard Core** is a production-grade Python framework designed for building **resilient**, **stateful**, and **grounded** AI agents. It eliminates LLM hallucinations by enforcing a strict anti-hallucination pipeline powered by LangGraph.
 
----
-
-## 🏗️ System Architecture
-
-The application follows a specialized **Production Anti-Hallucination Pipeline**:
-
-1.  **🔍 Query Rewriter**: Optimizes user input for precise Vector and Graph retrieval.
-2.  **📚 Hybrid Retriever**: Parallelized data fetching from **ChromaDB** (Semantic) and **Neo4j** (Relational).
-3.  **⚖️ Context Reranker**: Filters out noise to provide the LLM with only high-relevance information.
-4.  **🤖 LLM Generator**: Produces answers strictly grounded in the verified context.
-5.  **✅ Verifier Agent**: Automatically scores the "grounding" of the response to ensure accuracy.
-6.  **🛡️ Guardrails**: Applies confidence checks and safety policies before final delivery.
+[![PyPI version](https://badge.fury.io/py/langguard-core.svg)](https://badge.fury.io/py/langguard-core)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## ✨ Key Features
+## 🚀 Key Features
 
-- **Stateful Conversational Memory**: Powered by LangGraph's `MemorySaver` for persistent context across sessions.
-- **Tool-Augmented Intelligence**: 
-    - **Calculator**: For verified mathematical computations.
-    - **Neo4j Tool**: Direct Knowledge Graph queries via Cypher.
-    - **Web Search**: Real-time information fetching via **Tavily**.
-- **Resilience Layer**: **Circuit Breaker** patterns implemented for Groq LLM, ChromaDB, and Neo4j.
-- **Real-Time Streaming**: ChatGPT-style UI with Server-Sent Events (SSE) showing internal pipeline status.
-- **Observability**: Seamless integration with **LangSmith** for full execution tracing.
+- **6-Stage Anti-Hallucination Pipeline**: A robust workflow consisting of Query Rewriting, Hybrid Retrieval, Reranking, Grounded Generation, Verification, and Guardrails.
+- **Truth Verification**: Automated grounding scores that cross-reference AI responses with source context to ensure zero hallucinations.
+- **Resilience Engineering**: Built-in **Circuit Breakers** for LLMs and Databases to prevent cascading failures in production.
+- **Hybrid Retrieval**: Native support for parallel retrieval from **ChromaDB** (Semantic) and **Neo4j** (Graph).
+- **Stateful Memory**: Powered by LangGraph's persistent checkpointers to maintain conversational context across sessions.
 
 ---
 
-## 🛠️ Tech Stack
+## 📦 Installation
 
-- **Backend**: Python 3.10+, FastAPI
-- **Orchestration**: LangGraph, LangChain
-- **LLM**: Llama 3.3 70B & Llama 3 8B (via Groq)
-- **Vector DB**: ChromaDB
-- **Graph DB**: Neo4j (Aura DB)
-- **Memory/Cache**: Redis
-- **Monitoring**: LangSmith
-- **Circuit Breaker**: PyBreaker
+Install the core package via pip:
 
----
-
-## ⚙️ Setup & Installation Guide
-
-### 1. Clone the Repository
 ```bash
-git clone <your-repo-url>
-cd llm-evaluation
+pip install langguard-core
 ```
 
-### 2. Automated Setup
-The project includes a `setup.sh` script that handles pip upgrades and dependency installation:
-```bash
-chmod +x setup.sh
-./setup.sh
+---
+
+## ⚡ Quick Start
+
+LangGuard is designed to be integrated into any application with just a few lines of code.
+
+```python
+import chromadb
+from langguard import LangGuardPipeline
+
+# 1. Initialize your database clients
+chroma_client = chromadb.HttpClient(host='localhost', port=8000)
+# (Optionally) Initialize your Neo4j manager
+
+# 2. Build the production pipeline
+pipeline = LangGuardPipeline(
+    chroma_client=chroma_client,
+    neo4j_manager=None # Or pass your neo4j manager
+)
+
+# 3. Invoke the grounded agent
+async def ask_ai():
+    async for event in pipeline.astream("What is the impact of LLMs on system design?"):
+        print(event)
 ```
 
-### 3. Environment Configuration
-Create a `.env` file in the root directory. Use the following template as a guide:
+---
+
+## 🏗️ Production Architecture
+
+The library implements a specialized pipeline to ensure every response is verified:
+
+1.  **🔍 Query Rewriter**: Optimizes user input for high-performance retrieval.
+2.  **📚 Retriever**: Fetches data in parallel from Vector and Graph databases.
+3.  **⚖️ Reranker**: Filters out irrelevant context "noise."
+4.  **🤖 Generator**: Produces a response based *only* on the verified context.
+5.  **✅ Verifier**: Calculates a **Grounding Score** (0.0 - 1.0).
+6.  **🛡️ Guardrails**: Blocks responses if the grounding score falls below the safety threshold (default: 0.6).
+
+---
+
+## ⚙️ Configuration
+
+The package relies on the following environment variables. Create a `.env` file in your project root:
 
 ```env
 # --- LLM Provider (Groq) ---
-GROQ_API_KEY="your_groq_api_key_here"
+GROQ_API_KEY=your_groq_api_key
 
-# --- Search Tool (Tavily) ---
-TAVILY_API_KEY="your_tavily_api_key_here"
-
-# --- Vector Database (ChromaDB Cloud) ---
-CHROMA_API_KEY="your_chroma_api_key"
-CHROMA_TENANT="your_tenant_id"
-CHROMA_DB_NAME="llm-evaluation"
+# --- Remote Vector Database (ChromaDB Cloud) ---
+CHROMA_API_KEY=your_chroma_cloud_api_key
+CHROMA_TENANT=your_chroma_tenant_id
+CHROMA_DATABASE=your_database_name
 
 # --- Graph Database (Neo4j Aura) ---
-NEO4J_URI="neo4j+s://your-id.databases.neo4j.io"
-NEO4J_USER="neo4j"
-NEO4J_PASSWORD="your_neo4j_password"
+NEO4J_URI=your_neo4j_uri
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=your_neo4j_password
 
-# --- Cache & Pub/Sub (Redis) ---
-REDIS_HOST="localhost"
-REDIS_PORT=6379
-REDIS_PASSWORD=""
-
-# --- Observability (LangSmith) ---
-LANGCHAIN_TRACING_V2=true
-LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
-LANGCHAIN_API_KEY="your_langsmith_api_key"
-LANGCHAIN_PROJECT="llm-evaluation-pipeline"
+# --- Search Tool (Optional) ---
+TAVILY_API_KEY=your_tavily_api_key
 ```
 
 ---
-
-## 🚀 Running the Application
-
-To launch the entire pipeline (including the FastAPI gateway and internal LangGraph logic), simply run:
-
-```bash
-chmod +x run.sh
-./run.sh
-```
-
-The application will be available at: **`http://localhost:8000`**
-
----
-
-## 🔍 Anti-Hallucination & Guardrails
-
-The system is designed to be "Grounded by Default." 
-- Every response is cross-referenced with retrieved context in the **Verifier Agent** node.
-- A **Grounding Score** is calculated. 
-- The **Guardrails** node enforces a threshold (default: **0.6**). 
-- If the score is low, the system provides a safe refusal message: *"I cannot answer this as it may contain hallucinated information."*
 
 ## 🛡️ Resilience (Circuit Breakers)
-The system monitors the health of external services. If Neo4j, ChromaDB, or Groq becomes unresponsive, the **Circuit Breaker** will open, preventing system-wide crashes and returning a controlled fallback response.
+
+LangGuard protects your application from external service downtime. You can use the built-in breakers to wrap your own calls:
+
+```python
+from langguard import with_breaker, llm_breaker
+
+@with_breaker(llm_breaker)
+def my_custom_llm_call():
+    # Your logic here
+    pass
+```
 
 ---
 
+## 📊 Observability
+
+LangGuard integrates natively with **LangSmith**. To enable full execution tracing, simply set:
+
+```env
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_PROJECT="your-project-name"
+```
+
 ## 🤝 Contributing
-Feel free to open issues or submit pull requests to improve the pipeline logic or UI.
+
+We welcome contributions! Please feel free to submit a Pull Request or open an issue on the [GitHub Repository](https://github.com/Mayuradlak123/langguard-core).
+
+---
+*Built with ❤️ for the AI Engineering Community.*
