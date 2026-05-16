@@ -91,28 +91,9 @@ TAVILY_API_KEY=your_tavily_api_key
 ---
 
 ## 🛡️ Resilience (Circuit Breakers)
-
-LangGuard protects your application from external service downtime. You can use the built-in breakers to wrap your own calls:
-
-```python
-from langguard import with_breaker, llm_breaker
-
-@with_breaker(llm_breaker)
-def my_custom_llm_call():
-    # Your logic here
-    pass
-```
+The system monitors the health of external services. If Neo4j, ChromaDB, or Groq becomes unresponsive, the **Circuit Breaker** will open, preventing system-wide crashes and returning a controlled fallback response.
 
 ---
-
-## 📊 Observability
-
-LangGuard integrates natively with **LangSmith**. To enable full execution tracing, simply set:
-
-```env
-LANGCHAIN_TRACING_V2=true
-LANGCHAIN_PROJECT="your-project-name"
-```
 
 ## 🤝 Contributing
 
