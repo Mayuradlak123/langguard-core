@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "langguard-core"
 version = "0.1.0"
 authors = [
-  { name="Your Name", email="your.email@example.com" },
+  { name="Mayur Adlak", email="mayuradlak030@gmail.com" },
 ]
 description = "A production-grade, stateful AI agent pipeline with anti-hallucination guardrails."
 readme = "README.md"
@@ -31,5 +31,5 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/yourusername/langguard"
-"Bug Tracker" = "https://github.com/yourusername/langguard/issues"
+"Homepage" = "https://github.com/Mayuradlak123/langguard"
+"Bug Tracker" = "https://github.com/Mayuradlak123/langguard/issues"
