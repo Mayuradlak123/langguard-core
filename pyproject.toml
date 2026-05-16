@@ -11,9 +11,9 @@ authors = [
 description = "A production-grade, stateful AI agent pipeline with anti-hallucination guardrails."
 readme = "README.md"
 requires-python = ">=3.10"
+license = { text = "MIT" }
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
@@ -29,6 +29,9 @@ dependencies = [
     "python-dotenv",
     "tavily-python",
 ]
+
+[tool.setuptools]
+packages = ["langguard"]
 
 [project.urls]
 "Homepage" = "https://github.com/Mayuradlak123/langguard"
