@@ -114,7 +114,7 @@ The system is designed to be "Grounded by Default."
 - If the score is low, the system provides a safe refusal message: *"I cannot answer this as it may contain hallucinated information."*
 
 ## 🛡️ Resilience (Circuit Breakers)
-The system monitors the health of external services. If Neo4j, ChromaDB, or Groq becomes unresponsive, the **Circuit Breaker** will open, preventing system-wide crashes and returning a controlled fallback response.
+The system monitors the health of external services. If Neo4j, ChromaDB, or Groq becomes unresponsive, the **Circuit Breaker** will open, preventing system-wide crashes and returning a controlled fallback response. 
 
 ---
 
